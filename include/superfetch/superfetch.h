@@ -149,6 +149,7 @@ inline std::expected<memory_map, init_error> init_memory_map() {
       return std::unexpected(init_error::query_pfn);
 
     for (std::uint64_t i = 0; i < page_count; ++i) {
+      // Cache the translation for this page.
       if (void const* const virt = request->PageData[i].u2.VirtualAddress)
         mm.translations[virt] = (base_pfn + i) << 12;
     }
