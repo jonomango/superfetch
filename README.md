@@ -7,7 +7,7 @@ Simple library for translating virtual addresses to physical addresses from user
 #include <superfetch/superfetch.h>
 
 int main() {
-  auto const mm = spf::init_memory_map();
+  auto const mm = spf::memory_map::current();
   if (!mm) {
     // Do something with mm.error()
   }
@@ -15,7 +15,7 @@ int main() {
   // Any kernel virtual address.
   void const* const virt = ...;
   
-  std::uint64_t const phys = spf::translate(mm.value(), virt);
+  std::uint64_t const phys = mm->translate(virt);
   if (!phys) {
     // Do something...
   }
