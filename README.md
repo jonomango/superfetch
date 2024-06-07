@@ -11,15 +11,15 @@ int main() {
   if (!mm) {
     // Do something with mm.error()
   }
-  
+
   // Any kernel virtual address.
   void const* const virt = ...;
-  
+
   std::uint64_t const phys = mm->translate(virt);
   if (!phys) {
     // Do something...
   }
-  
+
   std::printf("%p -> %zX\n", virt, phys);
 }
 ```

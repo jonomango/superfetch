@@ -40,9 +40,9 @@ public:
 private:
   static bool raise_privilege();
 
-  static std::vector<memory_range> query_memory_ranges();
-  static std::vector<memory_range> query_memory_ranges_v1();
-  static std::vector<memory_range> query_memory_ranges_v2();
+  static memory_ranges query_memory_ranges();
+  static memory_ranges query_memory_ranges_v1();
+  static memory_ranges query_memory_ranges_v2();
 
   static NTSTATUS query_superfetch_info(
     SUPERFETCH_INFORMATION_CLASS info_class,
@@ -135,14 +135,14 @@ inline bool memory_map::raise_privilege() {
   return true;
 }
 
-inline std::vector<memory_range> memory_map::query_memory_ranges() {
+inline memory_ranges memory_map::query_memory_ranges() {
   auto ranges = query_memory_ranges_v1();
   if (ranges.empty())
     return query_memory_ranges_v2();
   return ranges;
 }
 
-inline std::vector<memory_range> memory_map::query_memory_ranges_v1() {
+inline memory_ranges memory_map::query_memory_ranges_v1() {
   ULONG buffer_length = 0;
 
   // STATUS_BUFFER_TOO_SMALL.
@@ -158,7 +158,7 @@ inline std::vector<memory_range> memory_map::query_memory_ranges_v1() {
       SuperfetchMemoryRangesQuery, info, buffer_length)))
     return {};
 
-  std::vector<memory_range> ranges = {};
+  memory_ranges ranges = {};
 
   for (std::uint32_t i = 0; i < info->RangeCount; ++i) {
     ranges.push_back({
@@ -170,7 +170,7 @@ inline std::vector<memory_range> memory_map::query_memory_ranges_v1() {
   return ranges;
 }
 
-inline std::vector<memory_range> memory_map::query_memory_ranges_v2() {
+inline memory_ranges memory_map::query_memory_ranges_v2() {
   ULONG buffer_length = 0;
 
   // STATUS_BUFFER_TOO_SMALL.
@@ -186,7 +186,7 @@ inline std::vector<memory_range> memory_map::query_memory_ranges_v2() {
       SuperfetchMemoryRangesQuery, info, buffer_length)))
     return {};
 
-  std::vector<memory_range> ranges = {};
+  memory_ranges ranges = {};
 
   for (std::uint32_t i = 0; i < info->RangeCount; ++i) {
     ranges.push_back({
